@@ -136,7 +136,7 @@ def train_model(config):
     Path(config["model_folder"]).mkdir(parents=True, exist_ok=True)
 
     train_dataloader, valid_dataloader, tokenizer_src, tokenizer_tgt = get_ds(config)
-    model = get_model(config, vocab_src_len=tokenizer_src.get_vocab_size(), vocab_tgt_len=tokenizer_tgt.get_vocab_size())
+    model = get_model(config, vocab_src_len=tokenizer_src.get_vocab_size(), vocab_tgt_len=tokenizer_tgt.get_vocab_size()).to(device)
 
     # Tensorboard
     writer = SummaryWriter(config["experiment_name"])
@@ -153,7 +153,7 @@ def train_model(config):
         optimizer.load_state_dict(state["optimizer_state_dict"])
         global_step = state["global_step"]
 
-    loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_src.token_to_id("[PAD]"))
+    loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_src.token_to_id("[PAD]")).to(device)
 
     for epoch in range(initial_epoch, config["num_epochs"]):
         batch_iterator = tqdm(train_dataloader, desc=f"Processing epoch {epoch:02d}")
