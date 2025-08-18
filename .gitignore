@@ -211,3 +211,4 @@ __marimo__/
 runs/
 weights/
 tokenizer_*.json
+tokenizers/
